@@ -1,0 +1,44 @@
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+export default function CartonBoxCalculator() {
+  const [length, setLength] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [material, setMaterial] = useState("Kraft");
+  const [cost, setCost] = useState(null);
+
+  const materials = {
+    "Kraft": 1.5,
+    "White": 2.0,
+    "EF": 1.8,
+    "BF": 2.2
+  };
+
+  const calculateCost = () => {
+    const area = 2 * ((length * width) + (width * height) + (height * length));
+    const materialCost = materials[material] || 1.5;
+    const totalCost = (area / 1000) * materialCost;
+    setCost(totalCost.toFixed(2));
+  };
+
+  return (
+    <Card className="p-4 max-w-md mx-auto mt-10">
+      <CardContent>
+        <h2 className="text-xl font-bold mb-4">Carton Box Calculator</h2>
+        <Input type="number" placeholder="Length (mm)" value={length} onChange={(e) => setLength(e.target.value)} className="mb-2" />
+        <Input type="number" placeholder="Width (mm)" value={width} onChange={(e) => setWidth(e.target.value)} className="mb-2" />
+        <Input type="number" placeholder="Height (mm)" value={height} onChange={(e) => setHeight(e.target.value)} className="mb-2" />
+        <select value={material} onChange={(e) => setMaterial(e.target.value)} className="w-full p-2 border rounded mb-2">
+          {Object.keys(materials).map((mat) => (
+            <option key={mat} value={mat}>{mat}</option>
+          ))}
+        </select>
+        <Button onClick={calculateCost} className="w-full">Calculate</Button>
+        {cost && <p className="mt-4 font-semibold">Estimated Cost: ${cost}</p>}
+      </CardContent>
+    </Card>
+  );
+}
